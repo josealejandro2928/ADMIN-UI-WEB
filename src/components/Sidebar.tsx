@@ -1,23 +1,20 @@
 import { useState } from 'react';
-import { Navbar, SegmentedControl, Text, createStyles, getStylesRef, rem } from '@mantine/core';
+import { Navbar, Text, createStyles, getStylesRef, rem, Button, Avatar, Group, Divider } from '@mantine/core';
 import {
-    IconShoppingCart,
-    IconLicense,
-    IconMessage2,
     IconBellRinging,
-    IconMessages,
     IconFingerprint,
     IconKey,
     IconSettings,
     Icon2fa,
-    IconUsers,
-    IconFileAnalytics,
     IconDatabaseImport,
     IconReceipt2,
-    IconReceiptRefund,
     IconLogout,
-    IconSwitchHorizontal,
+    IconFolders,
+    IconSwitchHorizontal
 } from '@tabler/icons-react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setUserLogout } from '../store/features/userSlice';
+import { Navigate, Link, NavLink } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
     navbar: {
@@ -73,55 +70,64 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-const tabs = [{ link: '', label: 'Notifications', icon: IconBellRinging },
-{ link: '', label: 'Billing', icon: IconReceipt2 },
-{ link: '', label: 'Security', icon: IconFingerprint },
-{ link: '', label: 'SSH Keys', icon: IconKey },
-{ link: '', label: 'Databases', icon: IconDatabaseImport },
-{ link: '', label: 'Authentication', icon: Icon2fa },
-{ link: '', label: 'Other Settings', icon: IconSettings }]
+const tabs = [
+    { link: 'repository', label: 'Repository', icon: IconFolders },
+    { link: 'models', label: 'Models', icon: IconFolders },
+    // { link: '', label: 'Billing', icon: IconReceipt2 },
+    // { link: '', label: 'Security', icon: IconFingerprint },
+    // { link: '', label: 'SSH Keys', icon: IconKey },
+    // { link: '', label: 'Databases', icon: IconDatabaseImport },
+    // { link: '', label: 'Authentication', icon: Icon2fa },
+    { link: 'config', label: 'Config Settings', icon: IconSettings }]
 
 export function SideBar() {
     const { classes, cx } = useStyles();
     const [active, setActive] = useState('Billing');
+    const dispatch = useAppDispatch()
+    const { isLoggedIn, user } = useAppSelector((state) => state.users);
 
     const links = tabs.map((item) => (
-        <a
-            className={cx(classes.link, { [classes.linkActive]: item.label === active })}
-            href={item.link}
+        <NavLink
+            className={(navData) => cx(classes.link, { [classes.linkActive]: navData.isActive })}
+            to={item.link}
             key={item.label}
-            onClick={(event) => {
-                event.preventDefault();
-                setActive(item.label);
-            }}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>
-        </a>
+        </NavLink>
     ));
 
-    return (
-        <Navbar width={{ sm: 300}} p="md" className={classes.navbar}>
-            <Navbar.Section>
-                <Text weight={500} size="sm" className={classes.title} color="dimmed" mb="xs">
-                    bgluesticker@mantine.dev
-                </Text>
-            </Navbar.Section>
+    function onLogout() {
+        dispatch(setUserLogout());
+    }
 
-            <Navbar.Section grow mt="xl">
+    return (
+        <Navbar width={{ sm: 300 }} p="md" className={classes.navbar}>
+            <Navbar.Section>
+                <Group>
+                    <Avatar color="cyan" radius="xl">{user?.name.charAt(0)}{user?.lastName.charAt(0)}</Avatar>
+                    <Text weight={500} size="sm" color="dimmed">
+                        {user?.email}
+                    </Text>
+                </Group>
+
+            </Navbar.Section>
+            <Divider my="sm" />
+
+            <Navbar.Section grow mt="xs">
                 {links}
             </Navbar.Section>
 
             <Navbar.Section className={classes.footer}>
-                <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+                <p className={classes.link}>
                     <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
                     <span>Change account</span>
-                </a>
+                </p>
 
-                <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+                <Button size="md" fullWidth variant="white" style={{ cursor: "pointer" }} className={classes.link} onClick={onLogout}>
                     <IconLogout className={classes.linkIcon} stroke={1.5} />
                     <span>Logout</span>
-                </a>
+                </Button>
             </Navbar.Section>
         </Navbar>
     );

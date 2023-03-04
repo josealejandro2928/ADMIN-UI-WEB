@@ -32,13 +32,15 @@ export const usersSlice = createSlice({
       };
       return state;
     },
-    setIsAuthInProgress: (state) => {
-      state = { ...state, isAuthInProgress: true };
+    setIsAuthInProgress: (state, action: PayloadAction<boolean>) => {
+      state = { ...state, isAuthInProgress: action.payload };
       return state;
     },
 
     setUserLogout: (state) => {
-      state = { ...initialState };
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      state = { ...initialState, isAuthInProgress: false };
       return state;
     },
   },

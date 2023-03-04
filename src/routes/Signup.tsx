@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Input, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import classes from "./Login.module.scss";
+import { User } from "../classes/user.interface";
+import { signUp } from "../functions/api.server";
+import { setUserLogin } from "../store/features/userSlice";
+import { handleAndVisualizeError } from "../common";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../store/hooks";
+import { useNavigate } from "react-router-dom";
 
-interface SignupFormData {
+export interface SignupFormData {
     name: string;
     lastName: string;
     email: string;
@@ -29,8 +36,19 @@ const Signup = () => {
         validateInputOnBlur: true
     });
 
-    const handleSubmit = () => {
-        console.log(form.values);
+    const [isLoading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (data: SignupFormData) => {
+        setLoading(true);
+        try {
+            let res = await signUp<User>(data);
+            toast(<strong>User created successfully: {res.email} </strong>, { type: "success", autoClose: 6000 })
+            navigate("/auth");
+        } catch (e: any) {
+            handleAndVisualizeError("Signup Filed",e);
+        }
+        setLoading(false);
     };
 
     return (

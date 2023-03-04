@@ -41,7 +41,7 @@ export function HeaderApp({ links }: HeaderSearchProps) {
             <div className={classes.inner}>
                 <Group >
                     <Image src={Logo} fit="unset" width={40} height={30}></Image>
-                    Application Name
+                    Discover and Analyser of AADL Models App
                 </Group>
                 <Burger
                     opened={opened}

@@ -2,10 +2,18 @@ import { AppShell, Navbar, Header, Footer } from "@mantine/core";
 import React from "react";
 import { SideBar } from '../components/Sidebar';
 import { HeaderApp } from "../components/Header";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from "../store/hooks";
 
 
 const AdminLayout = () => {
+    const { isLoggedIn, isAuthInProgress } = useAppSelector((state) => state.users);
+
+    if (isAuthInProgress) return <p>loading...</p>
+    if (!isLoggedIn) {
+        return <Navigate to="/auth" replace />;
+    }
+
     return (
         <AppShell
             padding="md"
@@ -16,7 +24,9 @@ const AdminLayout = () => {
                 main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
             })}
         >
-            <Outlet />
+            <div style={{ paddingRight: '1rem', height:"100%" }}>
+                <Outlet />
+            </div>
         </AppShell>
 
     )

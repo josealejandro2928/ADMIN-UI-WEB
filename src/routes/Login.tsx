@@ -39,7 +39,7 @@ const Login = () => {
             toast(<strong>User logged successfully</strong>, { type: "success" })
             navigate("/admin");
         } catch (e: any) {
-           handleAndVisualizeError(e);
+            handleAndVisualizeError("Login failed", e);
         }
         setLoading(false);
     };
@@ -54,7 +54,7 @@ const Login = () => {
                 Sign in
             </h2>
             <Text mb={16}>Welcome to the Discover Model App</Text>
-            <form>
+            <form onSubmit={form.onSubmit(handleSubmit)}>
                 <TextInput
                     radius="lg"
                     size="md"
@@ -76,20 +76,20 @@ const Login = () => {
                     {...form.getInputProps("password")}
                     style={{ marginBottom: 20 }}
                 />
+                <Button disabled={!form.isValid() || isLoading} radius="lg" size="md" variant="gradient" type="submit" fullWidth >
+                    Login
+                </Button>
 
             </form>
             {!isLoading && (
                 <>
-                    <Button disabled={!form.isValid()} radius="lg" size="md" variant="gradient" onClick={() => handleSubmit(form.values)} fullWidth >
-                        Login
-                    </Button>
                     <div className={classes["sign-in-form-divider"]}>
                         <p className={classes["text"]}>
                             or
                         </p>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <Link to="/signup" style={{ width: "100%", textDecoration: "none" }}>
+                        <Link to="signup" style={{ width: "100%", textDecoration: "none" }}>
                             <Button radius="lg" size="md" fullWidth variant="filled" color="gray">
                                 Signup
                             </Button>
