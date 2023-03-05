@@ -19,7 +19,7 @@ const NormalItemsView = ({ items, onClick, selection }: {
                 {!item.isDir && <img src={IconFile} alt={item.name} />}
                 <Tooltip position="bottom" arrowPosition="center"
                     label={item.name}>
-                    <Text className={classes["text"]} align="center" size="xs" w={100} truncate="end">{item.name}</Text>
+                    <Text className={classes["text"]} align="center" size="xs" lineClamp={2} w={120}>{item.name}</Text>
                 </Tooltip>
             </div>)
         })}

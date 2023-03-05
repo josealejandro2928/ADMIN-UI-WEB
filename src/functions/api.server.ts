@@ -34,3 +34,27 @@ export async function getModels<T>(token: string): Promise<T> {
   });
   return handleFetchResponse<T>(res);
 }
+
+export async function uploadModels<T>(data: FormData, token: string): Promise<T> {
+  let res = await fetch(API_URL + '/models', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+    method: 'POST',
+    body: data,
+  });
+  return handleFetchResponse<T>(res);
+}
+
+export async function deleteModel<T>(modelPath: string, token: string): Promise<T> {
+  let res = await fetch(API_URL + '/models', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'DELETE',
+    body: JSON.stringify({ path: modelPath }),
+  });
+  return handleFetchResponse<T>(res);
+}

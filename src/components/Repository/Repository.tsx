@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import useAuthMidd from '../../hooks/useAuthMidd';
-import { getModels } from '../../functions/api.server';
+import { getModels, deleteModel } from '../../functions/api.server';
 import { handleAndVisualizeError } from '../../common/index';
 import { useAppSelector } from '../../store/hooks';
-import { Tabs, Text, Grid, Table } from '@mantine/core';
+import { Tabs, Grid, Button, Modal } from '@mantine/core';
 import IconPc from "../../assets/images/icon-pc.png";
 import IconGithub from "../../assets/images/icon-github.svg";
 
@@ -11,15 +11,20 @@ import classes from "./Repository.module.scss";
 import NormalItemsView from './NormalItemsView';
 import DetailsMenuItemView from './DetailsMenuItemView';
 import { ItemRepository } from '../../classes/repository.classes';
+import { IconPlus } from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks';
+import AddModalFromLocal from '../modals/AddModalFromLocal';
 
 const Repository = () => {
     const { newFunction: listModels } = useAuthMidd(getModels);
+    const { newFunction: deleteModelFromRepo } = useAuthMidd(deleteModel);
     const [isLoading, setLoading] = useState<boolean>(false);
     // const { isLoggedIn, isAuthInProgress } = useAppSelector((state) => state.users);
     const [localModelsRepo, setLocalModelsRepo] = useState<Array<ItemRepository>>([]);
     const [githubModelsRepo, setGithubModelsRepo] = useState<Array<ItemRepository>>([]);
     const [selectionLocal, setSelectionLocal] = useState<ItemRepository | null>(null);
     const [selectionGithub, setSelectionGithub] = useState<ItemRepository | null>(null);
+    const [opened, { open: openAddNewLocalModelModal, close: closeAddNewLocalModelModal }] = useDisclosure(false);
 
     useEffect(() => {
         getDataFromModels();
@@ -46,6 +51,25 @@ const Repository = () => {
         return selectionLocal == item ? setSelectionGithub(null) : setSelectionGithub(item);
     }
 
+    function onFinishUploadModels(data: any) {
+        console.log("🚀 ~ file: Repository.tsx:53 ~ onFinishUploadModels ~ data:", data);
+        closeAddNewLocalModelModal();
+        getDataFromModels();
+
+    }
+    async function onDeleteModel(item: ItemRepository) {
+        setLoading(true);
+        try {
+            await deleteModelFromRepo(item.path);
+            getDataFromModels();
+            setSelectionGithub(null);
+            setSelectionLocal(null);
+        } catch (e) {
+            handleAndVisualizeError("Error deleting", e);
+        }
+        setLoading(false);
+    }
+
     return <Tabs variant="outline" radius="md" defaultValue="Local">
         <Tabs.List>
             <Tabs.Tab value="Local" icon={<img src={IconPc} height={24} />}>From Local</Tabs.Tab>
@@ -58,9 +82,25 @@ const Repository = () => {
                     <NormalItemsView onClick={onSelectLocalItem} items={localModelsRepo} selection={selectionLocal}></NormalItemsView>
                 </Grid.Col>
                 <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
-                    <DetailsMenuItemView item={selectionLocal} />
+                    <DetailsMenuItemView
+                        deleteModel={onDeleteModel}
+                        item={selectionLocal}
+                        addBtn={
+                            <Button onClick={() => openAddNewLocalModelModal()} variant="gradient"
+                                radius="md" size="xs"
+                                leftIcon={<IconPlus size="1rem" />}>
+                                Add a new
+                            </Button>
+                        } />
                 </Grid.Col>
             </Grid>
+            <Modal closeOnEscape closeOnClickOutside={false}
+                opened={opened}
+                size="lg"
+                onClose={closeAddNewLocalModelModal}
+                title="Add new models from local">
+                <AddModalFromLocal onFinish={onFinishUploadModels}></AddModalFromLocal>
+            </Modal>
 
         </Tabs.Panel>
 
@@ -70,7 +110,7 @@ const Repository = () => {
                     <NormalItemsView onClick={onSelectGithubItem} items={githubModelsRepo} selection={selectionGithub}></NormalItemsView>
                 </Grid.Col>
                 <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
-                    <DetailsMenuItemView item={selectionGithub} />
+                    <DetailsMenuItemView deleteModel={onDeleteModel} item={selectionGithub} addBtn={null} />
                 </Grid.Col>
             </Grid>
         </Tabs.Panel>

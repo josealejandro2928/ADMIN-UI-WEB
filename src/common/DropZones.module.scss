@@ -1,0 +1,14 @@
+.wrapper {
+  position: 'relative';
+  margin-bottom: 2rem;
+  .dropzone {
+    border-width: 0.1rem;
+    padding-bottom: 2rem;
+  }
+  .control {
+    position: absolute;
+    width: 250px;
+    left: calc(50% - 120px);
+    bottom: 24px;
+  }
+}
