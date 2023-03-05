@@ -1,15 +1,11 @@
-import { BackgroundImage, Group, Loader } from '@mantine/core';
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Group, Loader } from '@mantine/core';
+import { Outlet } from 'react-router-dom';
+
 import classes from "./AuthLayout.module.scss";
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setIsAuthInProgress, setUserLogin } from '../store/features/userSlice';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 
 const AuthLayout = () => {
-    const { isLoggedIn, isAuthInProgress } = useAppSelector((state) => state.users);
-    const navigate = useNavigate();
-    const location = useLocation()
+    const { isAuthInProgress } = useAppSelector((state) => state.users);
 
     return (
         <div className={classes["container"]}>

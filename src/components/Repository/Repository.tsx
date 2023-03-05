@@ -14,6 +14,7 @@ import { ItemRepository } from '../../classes/repository.classes';
 import { IconPlus } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import AddModalFromLocal from '../modals/AddModalFromLocal';
+import AddGithubLinksModal from '../modals/AddGithubLinksModal';
 
 const Repository = () => {
     const { newFunction: listModels } = useAuthMidd(getModels);
@@ -24,7 +25,8 @@ const Repository = () => {
     const [githubModelsRepo, setGithubModelsRepo] = useState<Array<ItemRepository>>([]);
     const [selectionLocal, setSelectionLocal] = useState<ItemRepository | null>(null);
     const [selectionGithub, setSelectionGithub] = useState<ItemRepository | null>(null);
-    const [opened, { open: openAddNewLocalModelModal, close: closeAddNewLocalModelModal }] = useDisclosure(false);
+    const [openedAddNewLocalModelModal, { open: openAddNewLocalModelModal, close: closeAddNewLocalModelModal }] = useDisclosure(false);
+    const [openedAddNewGithubLinksModal, { open: openAddNewGithubLinksModal, close: closeAddNewGithubLinksModal }] = useDisclosure(false);
 
     useEffect(() => {
         getDataFromModels();
@@ -54,6 +56,7 @@ const Repository = () => {
     function onFinishUploadModels(data: any) {
         console.log("🚀 ~ file: Repository.tsx:53 ~ onFinishUploadModels ~ data:", data);
         closeAddNewLocalModelModal();
+        closeAddNewGithubLinksModal();
         getDataFromModels();
 
     }
@@ -95,7 +98,7 @@ const Repository = () => {
                 </Grid.Col>
             </Grid>
             <Modal closeOnEscape closeOnClickOutside={false}
-                opened={opened}
+                opened={openedAddNewLocalModelModal}
                 size="lg"
                 onClose={closeAddNewLocalModelModal}
                 title="Add new models from local">
@@ -107,12 +110,28 @@ const Repository = () => {
         <Tabs.Panel value="Github" pt="xs">
             <Grid>
                 <Grid.Col xs={8}>
-                    <NormalItemsView onClick={onSelectGithubItem} items={githubModelsRepo} selection={selectionGithub}></NormalItemsView>
+                    <NormalItemsView onClick={onSelectGithubItem} items={githubModelsRepo}
+                        selection={selectionGithub}></NormalItemsView>
                 </Grid.Col>
                 <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
-                    <DetailsMenuItemView deleteModel={onDeleteModel} item={selectionGithub} addBtn={null} />
+                    <DetailsMenuItemView deleteModel={onDeleteModel}
+                        item={selectionGithub}
+                        addBtn={
+                            <Button onClick={() => openAddNewGithubLinksModal()} variant="gradient"
+                                radius="md" size="xs"
+                                leftIcon={<IconPlus size="1rem" />}>
+                                Add a new
+                            </Button>
+                        } />
                 </Grid.Col>
             </Grid>
+            <Modal closeOnEscape closeOnClickOutside={false}
+                opened={openedAddNewGithubLinksModal}
+                size="lg"
+                onClose={closeAddNewGithubLinksModal}
+                title="Add new sources from github">
+                <AddGithubLinksModal onFinish={onFinishUploadModels}></AddGithubLinksModal>
+            </Modal>
         </Tabs.Panel>
     </Tabs>
 }

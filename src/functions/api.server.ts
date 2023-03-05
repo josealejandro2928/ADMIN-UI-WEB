@@ -58,3 +58,14 @@ export async function deleteModel<T>(modelPath: string, token: string): Promise<
   });
   return handleFetchResponse<T>(res);
 }
+
+export async function getConfig<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/config', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}
