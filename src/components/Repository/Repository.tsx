@@ -3,19 +3,23 @@ import useAuthMidd from '../../hooks/useAuthMidd';
 import { getModels } from '../../functions/api.server';
 import { handleAndVisualizeError } from '../../common/index';
 import { useAppSelector } from '../../store/hooks';
-import { Tabs, Text, Group, Grid, Divider, Table, Tooltip } from '@mantine/core';
-import { IconPhoto, IconBrandGithub } from '@tabler/icons-react';
+import { Tabs, Text, Grid, Table } from '@mantine/core';
 import IconPc from "../../assets/images/icon-pc.png";
 import IconGithub from "../../assets/images/icon-github.svg";
-import IconFolder from "../../assets/images/icon-Folder.svg";
+
 import classes from "./Repository.module.scss";
+import NormalItemsView from './NormalItemsView';
+import DetailsMenuItemView from './DetailsMenuItemView';
+import { ItemRepository } from '../../classes/repository.classes';
 
 const Repository = () => {
     const { newFunction: listModels } = useAuthMidd(getModels);
     const [isLoading, setLoading] = useState<boolean>(false);
     // const { isLoggedIn, isAuthInProgress } = useAppSelector((state) => state.users);
-    const [localModelsRepo, setLocalModelsRepo] = useState<Array<{ path: string; name: string, items?: number, isDir: boolean }>>([]);
-    const [selectionLocal, setSelectionLocal] = useState<{ path: string; name: string, items?: number, isDir: boolean } | null>(null);
+    const [localModelsRepo, setLocalModelsRepo] = useState<Array<ItemRepository>>([]);
+    const [githubModelsRepo, setGithubModelsRepo] = useState<Array<ItemRepository>>([]);
+    const [selectionLocal, setSelectionLocal] = useState<ItemRepository | null>(null);
+    const [selectionGithub, setSelectionGithub] = useState<ItemRepository | null>(null);
 
     useEffect(() => {
         getDataFromModels();
@@ -26,6 +30,7 @@ const Repository = () => {
         try {
             let data: any = await listModels();
             setLocalModelsRepo(data.localModelsRepo)
+            setGithubModelsRepo(data.githubModelsRepo)
         } catch (e: any) {
             handleAndVisualizeError("Error", e);
         }
@@ -33,11 +38,12 @@ const Repository = () => {
 
     }
 
-    function onSelectItem(item: any) {
-        if (selectionLocal == item) setSelectionLocal(null);
-        else {
-            setSelectionLocal(item);
-        }
+    function onSelectLocalItem(item: any) {
+        return selectionLocal == item ? setSelectionLocal(null) : setSelectionLocal(item);
+    }
+
+    function onSelectGithubItem(item: any) {
+        return selectionLocal == item ? setSelectionGithub(null) : setSelectionGithub(item);
     }
 
     return <Tabs variant="outline" radius="md" defaultValue="Local">
@@ -49,71 +55,29 @@ const Repository = () => {
         <Tabs.Panel value="Local" pt="xs" >
             <Grid>
                 <Grid.Col xs={8}>
-                    <NormalView onClick={onSelectItem} items={localModelsRepo} selection={selectionLocal}></NormalView>
+                    <NormalItemsView onClick={onSelectLocalItem} items={localModelsRepo} selection={selectionLocal}></NormalItemsView>
                 </Grid.Col>
                 <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
-                    {selectionLocal && <ItemDetailsView item={selectionLocal} />}
-
+                    <DetailsMenuItemView item={selectionLocal} />
                 </Grid.Col>
             </Grid>
 
         </Tabs.Panel>
 
         <Tabs.Panel value="Github" pt="xs">
-            Messages tab content
+            <Grid>
+                <Grid.Col xs={8}>
+                    <NormalItemsView onClick={onSelectGithubItem} items={githubModelsRepo} selection={selectionGithub}></NormalItemsView>
+                </Grid.Col>
+                <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
+                    <DetailsMenuItemView item={selectionGithub} />
+                </Grid.Col>
+            </Grid>
         </Tabs.Panel>
     </Tabs>
 }
 
-const NormalView = ({ items, onClick, selection }: {
-    items: Array<{
-        path: string; name: string,
-        items?: number, isDir: boolean
-    }>,
-    selection: any,
-    onClick: any
-}) => {
-    return <div className={classes["normal-items-container"]}>
-        {items?.map((item) => {
-            return (<div key={item.path}
-                onClick={() => onClick(item)} className={selection == item ?
-                    `${classes["item"]} ${classes["selected"]}`
-                    : classes["item"]}>
-                <img src={IconFolder} alt={item.name} />
-                <Tooltip position="bottom" arrowPosition="center"
-                    label={item.name}>
-                    <Text className={classes["text"]} align="center" size="xs" w={100} truncate="end">{item.name}</Text>
-                </Tooltip>
-            </div>)
-        })}
-    </div>
-}
 
-const ItemDetailsView = ({ item }: {
-    item: {
-        path: string; name: string,
-        items?: number, isDir: boolean
-    }
-}) => {
-    return <Table striped highlightOnHover withBorder withColumnBorders fontSize="xs">
-        <thead>
-            <tr>
-                <th>name</th>
-                <th>{item.name}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>path</td>
-                <td><Text truncate="end" w={200}>{item.path}</Text></td>
-            </tr>
-            <tr>
-                <td>items</td>
-                <td>{item.items}</td>
-            </tr>
-        </tbody>
-    </Table>
-}
 
 
 

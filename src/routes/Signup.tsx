@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Card, Input, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import classes from "./Login.module.scss";
-import { User } from "../classes/user.interface";
+import { User } from "../classes/user.classes";
 import { signUp } from "../functions/api.server";
 import { setUserLogin } from "../store/features/userSlice";
 import { handleAndVisualizeError } from "../common";
