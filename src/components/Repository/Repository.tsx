@@ -3,7 +3,7 @@ import useAuthMidd from '../../hooks/useAuthMidd';
 import { getModels, deleteModel } from '../../functions/api.server';
 import { handleAndVisualizeError } from '../../common/index';
 import { useAppSelector } from '../../store/hooks';
-import { Tabs, Grid, Button, Modal } from '@mantine/core';
+import { Tabs, Grid, Button, Modal, Group, Text, Stack, List } from '@mantine/core';
 import IconPc from "../../assets/images/icon-pc.png";
 import IconGithub from "../../assets/images/icon-github.svg";
 
@@ -15,6 +15,7 @@ import { IconPlus } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import AddModalFromLocal from '../modals/AddModalFromLocal';
 import AddGithubLinksModal from '../modals/AddGithubLinksModal';
+import { Config } from '../../classes/config.classes';
 
 const Repository = () => {
     const { newFunction: listModels } = useAuthMidd(getModels);
@@ -27,6 +28,7 @@ const Repository = () => {
     const [selectionGithub, setSelectionGithub] = useState<ItemRepository | null>(null);
     const [openedAddNewLocalModelModal, { open: openAddNewLocalModelModal, close: closeAddNewLocalModelModal }] = useDisclosure(false);
     const [openedAddNewGithubLinksModal, { open: openAddNewGithubLinksModal, close: closeAddNewGithubLinksModal }] = useDisclosure(false);
+    const config: Config | null | undefined = useAppSelector((state) => state.config.config);
 
     useEffect(() => {
         getDataFromModels();
@@ -123,6 +125,15 @@ const Repository = () => {
                                 Add a new
                             </Button>
                         } />
+
+                    <Text mt="xl" fz="sm">External resources</Text>
+                    <List>
+                        {config?.externalResources?.map((el) =>
+                            <List.Item key={el}>
+                                <Text fz="xs" lineClamp={2} w={"90%"}>{el}</Text>
+                            </List.Item>
+                        )}
+                    </List>
                 </Grid.Col>
             </Grid>
             <Modal closeOnEscape closeOnClickOutside={false}

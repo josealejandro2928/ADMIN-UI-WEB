@@ -6,7 +6,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Group, Loader, Switch } from '@mantine/core';
 import Login from '../routes/Login';
 import Repository from '../components/Repository/Repository';
-import Home from '../components/Home/Home';
+import Home from '../components/Models/Models';
 import Signup from '../routes/Signup';
 import AuthLayout from '../layout/AuthLayout';
 import { ErrorBoundary } from '../common/ErrorBoundary';

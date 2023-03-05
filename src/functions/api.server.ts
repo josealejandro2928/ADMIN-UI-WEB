@@ -69,3 +69,15 @@ export async function getConfig<T>(token: string): Promise<T> {
   });
   return handleFetchResponse<T>(res);
 }
+
+export async function updateConfig<T>(data: any, token: string): Promise<T> {
+  let res = await fetch(API_URL + '/config', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    method: 'POST',
+  });
+  return handleFetchResponse<T>(res);
+}

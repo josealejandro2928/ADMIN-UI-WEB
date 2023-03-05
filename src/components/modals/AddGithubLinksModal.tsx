@@ -1,59 +1,79 @@
-import { Button, Checkbox, List, Flex, Group, Loader } from '@mantine/core';
+import { Button, Checkbox, List, Flex, Group, Loader, TextInput, Stack, ActionIcon } from '@mantine/core';
 import { DropzoneButton } from "../../common/DropZones";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import classes from "./AddGithubLinksModal.module.scss"
 import useAuthMidd from '../../hooks/useAuthMidd';
-import { uploadModels } from '../../functions/api.server';
+import { updateConfig, uploadModels } from '../../functions/api.server';
 import { handleAndVisualizeError } from '../../common/index';
 import { toast } from 'react-toastify';
+import { useForm } from '@mantine/form';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { IconTrash } from '@tabler/icons-react';
+import { Config } from '../../classes/config.classes';
+import { setConfig } from '../../store/features/configSlice';
 
 const AddGithubLinksModal = ({ onFinish }: { onFinish: (data: any) => any }) => {
-    const [files, setFiles] = useState<Array<File>>(new Array())
-    const [selectedFiles, setSelectedFiles] = useState<Array<File>>(new Array())
     const [isLoading, setLoading] = useState<boolean>(false);
-    const { newFunction: uploadModelsToLocalRepo } = useAuthMidd<any>(uploadModels);
-
-    function onSelectFiles(files: File[]) {
-        setFiles(files);
-        setSelectedFiles(files);
-    }
-    function isSelectedFile(file: File) {
-        return selectedFiles.indexOf(file) > -1
-    }
-
-    function onChangeSelection(file: File) {
-        if (isLoading) return
-        if (selectedFiles.indexOf(file) > -1) {
-            setSelectedFiles(selectedFiles.filter((f) => f != file))
-        } else {
-            setSelectedFiles([...selectedFiles, file])
-        }
-    }
-
-    function onClearSelection() {
-        setFiles([]);
-        setSelectedFiles([]);
-    }
+    const externalResources = useAppSelector((state) => state?.config?.config?.externalResources || [])
+    const { newFunction: updateConfigAuth } = useAuthMidd<any>(updateConfig);
+    const dispatch = useAppDispatch();
+    const form = useForm({
+        initialValues: {
+            externalResources: externalResources,
+        },
+        validate: {
+            externalResources: (value) => {
+                let reg = /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/
+                let t = value.every((val) => reg.test(val)) ? null : "Invalid url";
+                return t
+            }
+        },
+        validateInputOnBlur: true
+    });
 
     async function onSave() {
         setLoading(true);
-        let data: FormData[] = [];
-        for (let file of selectedFiles) {
-            let entry = new FormData();
-            entry.append(file.name.replace(".zip", ""), file);
-            data.push(entry);
-        }
+        let resources: Set<String> = new Set(form.getInputProps("externalResources").value);
+
         try {
-            let res = await Promise.all(data.map(d => uploadModelsToLocalRepo(d)));
-            onFinish(res);
-            toast("Uploaded files successfully", { type: "success" })
+            let config: { config: Config } = await updateConfigAuth({ "externalResources": [...resources] });
+            dispatch(setConfig(config));
+            onFinish(null);
+            toast("Updated Github sources successfully, when you run the analysis phase the resources will be pulled from github",
+                { type: "info", autoClose: 5000 })
         } catch (e) {
             handleAndVisualizeError("Error uploading models", e)
         }
         setLoading(false);
     }
 
-    return <h2>Hello</h2>
+    function onAddResource() {
+        form.insertListItem("externalResources", "");
+    }
+
+    return (
+        <div>
+            <Stack>
+                {form.values.externalResources.map((value, index) => {
+                    return (
+                        <Group key={index} grow>
+                            <TextInput style={{ "maxWidth": "100%", "width": "80%" }} type="text" placeholder='http://resourse.com' {...form.getInputProps(`externalResources.${index}`)} />
+                            <ActionIcon color="red" onClick={() => form.removeListItem('externalResources', index)}>
+                                <IconTrash size="1rem" />
+                            </ActionIcon>
+                        </Group>
+                    )
+                })}
+            </Stack>
+            <Button mt="sm" size='xs' onClick={onAddResource}> Add resource</Button>
+            <Flex justify="flex-end">
+                <Button disabled={!form.isValid()} onClick={onSave}>Save</Button>
+            </Flex>
+            {isLoading && (<Group position="center">
+                <Loader size="lg" variant="bars" />
+            </Group>)}
+        </div>
+    )
 }
 
 export default AddGithubLinksModal;

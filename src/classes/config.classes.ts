@@ -8,6 +8,6 @@ export interface Config {
   outputFolderName: string;
   ecoreRequiredFilesFolder: string;
   rootPath: string;
-  externalResources: string;
+  externalResources: string[];
   pathToConfigJson: string;
 }
