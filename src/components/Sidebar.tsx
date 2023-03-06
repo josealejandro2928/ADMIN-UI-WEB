@@ -1,20 +1,16 @@
 import { useState } from 'react';
 import { Navbar, Text, createStyles, getStylesRef, rem, Button, Avatar, Group, Divider } from '@mantine/core';
 import {
-    IconBellRinging,
-    IconFingerprint,
-    IconKey,
     IconSettings,
-    Icon2fa,
-    IconDatabaseImport,
-    IconReceipt2,
     IconLogout,
     IconFolders,
-    IconSwitchHorizontal
+    IconSwitchHorizontal,
+    IconFileCode,
+    IconPlayerPlay,
 } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setUserLogout } from '../store/features/userSlice';
-import { Navigate, Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
     navbar: {
@@ -72,17 +68,12 @@ const useStyles = createStyles((theme) => ({
 
 const tabs = [
     { link: 'repository', label: 'Repository', icon: IconFolders },
-    { link: 'models', label: 'Models', icon: IconFolders },
-    // { link: '', label: 'Billing', icon: IconReceipt2 },
-    // { link: '', label: 'Security', icon: IconFingerprint },
-    // { link: '', label: 'SSH Keys', icon: IconKey },
-    // { link: '', label: 'Databases', icon: IconDatabaseImport },
-    // { link: '', label: 'Authentication', icon: Icon2fa },
+    { link: 'models', label: 'Models', icon: IconFileCode },
+    { link: 'analysis', label: 'Conversion and Analysis ', icon: IconPlayerPlay },
     { link: 'config', label: 'Config Settings', icon: IconSettings }]
 
 export function SideBar() {
     const { classes, cx } = useStyles();
-    const [active, setActive] = useState('Billing');
     const dispatch = useAppDispatch()
     const { isLoggedIn, user } = useAppSelector((state) => state.users);
 

@@ -12,7 +12,10 @@ const NormalItemsView = ({ items, onClick, selection }: {
     return <div className={classes["normal-items-container"]}>
         {items?.map((item) => {
             return (<div key={item.path}
-                onClick={() => onClick(item)} className={selection == item ?
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClick(item)
+                }} className={selection == item ?
                     `${classes["item"]} ${classes["selected"]}`
                     : classes["item"]}>
                 {item.isDir && <img src={IconFolder} alt={item.name} />}

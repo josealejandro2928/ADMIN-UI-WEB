@@ -6,7 +6,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Group, Loader, Switch } from '@mantine/core';
 import Login from '../routes/Login';
 import Repository from '../components/Repository/Repository';
-import Home from '../components/Models/Models';
+import Models from '../components/Models/Models';
 import Signup from '../routes/Signup';
 import AuthLayout from '../layout/AuthLayout';
 import { ErrorBoundary } from '../common/ErrorBoundary';
@@ -17,6 +17,7 @@ import { Slide } from 'react-toastify';
 import { setIsAuthInProgress, setUserLogin } from '../store/features/userSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import useAuthMidd from '../hooks/useAuthMidd';
+import ConversionAnalysis from '../components/ConversionAnalysis/ConversionAnalysis';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -51,7 +52,8 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="repository" />}></Route>
             <Route path="repository" element={<Repository />} />
-            <Route path="models" element={<Home />} />
+            <Route path="models" element={<Models />} />
+            <Route path="analysis" element={<ConversionAnalysis />} />
           </Route>
           <Route path='*' element={<Navigate to="admin" />}></Route>
         </Routes>

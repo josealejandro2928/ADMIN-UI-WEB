@@ -52,11 +52,10 @@ const Repository = () => {
     }
 
     function onSelectGithubItem(item: any) {
-        return selectionLocal == item ? setSelectionGithub(null) : setSelectionGithub(item);
+        return selectionGithub == item ? setSelectionGithub(null) : setSelectionGithub(item);
     }
 
     function onFinishUploadModels(data: any) {
-        console.log("🚀 ~ file: Repository.tsx:53 ~ onFinishUploadModels ~ data:", data);
         closeAddNewLocalModelModal();
         closeAddNewGithubLinksModal();
         getDataFromModels();
@@ -83,7 +82,7 @@ const Repository = () => {
 
         <Tabs.Panel value="Local" pt="xs" >
             <Grid>
-                <Grid.Col xs={8}>
+                <Grid.Col xs={8} onClick={() => setSelectionLocal(null)}>
                     <NormalItemsView onClick={onSelectLocalItem} items={localModelsRepo} selection={selectionLocal}></NormalItemsView>
                 </Grid.Col>
                 <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
@@ -111,7 +110,7 @@ const Repository = () => {
 
         <Tabs.Panel value="Github" pt="xs">
             <Grid>
-                <Grid.Col xs={8}>
+                <Grid.Col xs={8} onClick={() => setSelectionGithub(null)}>
                     <NormalItemsView onClick={onSelectGithubItem} items={githubModelsRepo}
                         selection={selectionGithub}></NormalItemsView>
                 </Grid.Col>

@@ -11,3 +11,9 @@ export interface Config {
   externalResources: string[];
   pathToConfigJson: string;
 }
+
+export interface Log {
+  id: string;
+  dataLogs: Array<string>;
+  errorLogs: Array<string>;
+}

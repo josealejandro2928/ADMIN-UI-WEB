@@ -81,3 +81,14 @@ export async function updateConfig<T>(data: any, token: string): Promise<T> {
   });
   return handleFetchResponse<T>(res);
 }
+
+export async function getLatestLogs<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/reports/conv_analysis_phase', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}
