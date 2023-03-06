@@ -1,0 +1,68 @@
+import React from "react";
+import { ScrollArea, Table, Text } from "@mantine/core";
+import { useState, useEffect } from 'react';
+import { render } from "react-dom";
+
+const SmartTable = ({ files, style = {}, columns, className }:
+    {
+        files: Array<any>,
+        columns?: any[] | null,
+        className?: any,
+        style?: React.StyleHTMLAttributes<any>
+    }) => {
+    const [data, setData] = useState<Array<any>>([]);
+    const [usedColumns, setUsedColumns] = useState<Array<string>>([]);
+
+    useEffect(() => {
+        generateColumns();
+        populateData();
+    }, [files, columns]);
+
+    function generateColumns() {
+        if (columns?.length) {
+            setUsedColumns(columns);
+            return
+        }
+        if (files.length == 0) return;
+        let firsEl = files[0];
+        setUsedColumns(Object.keys(firsEl));
+    }
+
+    function populateData() {
+        setData(files);
+    }
+
+    function renderCell(el: any) {
+        if ((typeof el == "string" || typeof el == "number") && !isNaN(parseInt(el as string))) {
+            return (+el).toFixed(2)
+        }
+        return el.toString();
+    }
+
+    return (
+        <ScrollArea h={`calc(100vh - 220px)`}>
+            <Table captionSide="bottom" className={className} {...style}
+                striped highlightOnHover withBorder withColumnBorders>
+                <thead>
+                    <tr>
+                        {usedColumns.map((el) => <th key={el}>{el}</th>)}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {data.map((file, i) => (
+                        (<tr key={i} >
+                            {usedColumns.map((el, j) =>
+                                <td key={`${i},${j}`}>
+                                    <span>{renderCell(file[el])}</span>
+                                </td>
+                            )}
+                        </tr>)
+                    ))}
+                </tbody>
+            </Table>
+        </ScrollArea >
+    );
+};
+
+export default SmartTable;

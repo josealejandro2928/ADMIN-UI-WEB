@@ -44,8 +44,10 @@ const AddModalFromLocal = ({ onFinish }: { onFinish: (data: any) => any }) => {
             data.push(entry);
         }
         try {
-            let res = await Promise.all(data.map(d=>uploadModelsToLocalRepo(d)));
-            onFinish(res);
+            for(const d of data){
+                await uploadModelsToLocalRepo(d);
+            }
+            onFinish({});
             toast("Uploaded files successfully", { type: "success" })
         } catch (e) {
             handleAndVisualizeError("Error uploading models", e)

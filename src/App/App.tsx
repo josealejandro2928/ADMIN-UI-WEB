@@ -18,6 +18,7 @@ import { setIsAuthInProgress, setUserLogin } from '../store/features/userSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import useAuthMidd from '../hooks/useAuthMidd';
 import ConversionAnalysis from '../components/ConversionAnalysis/ConversionAnalysis';
+import Reports from '../components/Reports/Reports';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -54,6 +55,7 @@ function App() {
             <Route path="repository" element={<Repository />} />
             <Route path="models" element={<Models />} />
             <Route path="analysis" element={<ConversionAnalysis />} />
+            <Route path="results" element={<Reports />} />
           </Route>
           <Route path='*' element={<Navigate to="admin" />}></Route>
         </Routes>

@@ -92,3 +92,47 @@ export async function getLatestLogs<T>(token: string): Promise<T> {
   });
   return handleFetchResponse<T>(res);
 }
+
+export async function getModelDiscover<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/models/discover', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}
+
+export async function getModelAnalyse<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/models/analyse', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}
+
+export async function invalidCache<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/home/invalid_cache', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}
+
+export async function getReports<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/reports', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}

@@ -7,6 +7,7 @@ import {
     IconSwitchHorizontal,
     IconFileCode,
     IconPlayerPlay,
+    IconReportAnalytics
 } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setUserLogout } from '../store/features/userSlice';
@@ -70,6 +71,7 @@ const tabs = [
     { link: 'repository', label: 'Repository', icon: IconFolders },
     { link: 'models', label: 'Models', icon: IconFileCode },
     { link: 'analysis', label: 'Conversion and Analysis ', icon: IconPlayerPlay },
+    { link: 'results', label: 'Results and reports', icon: IconReportAnalytics },
     { link: 'config', label: 'Config Settings', icon: IconSettings }]
 
 export function SideBar() {
