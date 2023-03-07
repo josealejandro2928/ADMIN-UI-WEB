@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import ConversionAnalysis from '../components/ConversionAnalysis/ConversionAnalysis';
 import Reports from '../components/Reports/Reports';
 import Jupyter from '../components/Jupyter/Jupyter';
+import Config from '../components/Config/Config';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -56,6 +57,7 @@ function App() {
             <Route path="analysis" element={<ConversionAnalysis />} />
             <Route path="results" element={<Reports />} />
             <Route path="jupyter" element={<Jupyter />} />
+            <Route path="config" element={<Config />} />
           </Route>
           <Route path='*' element={<Navigate to="admin" />}></Route>
         </Routes>

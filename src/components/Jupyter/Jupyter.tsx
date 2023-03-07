@@ -28,8 +28,13 @@ const Jupyter = () => {
                 handleAndVisualizeError("Error", e);
             }
             setLoading(false);
-
         })()
+
+        return () => {
+            _stopJupyter().catch((e: any) => {
+                handleAndVisualizeError("Error stopping jupyter", e)
+            })
+        }
 
     }, [])
 
@@ -51,6 +56,7 @@ const Jupyter = () => {
         {isLoading && (<Group className={classes["loader"]} position="center">
             <Loader size="lg" variant="bars" />
         </Group>)}
+        <a target="_blank" className={classes["open-tab"]} href={`http://${jpData?.url}`}> Open in another tab</a>
     </div>
 
 }

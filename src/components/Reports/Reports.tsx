@@ -8,6 +8,7 @@ import { getReports } from "../../functions/api.server";
 import SmartTable from "../../common/SmartTable";
 import classes from "./Reports.module.scss"
 import { IconCloudDownload } from "@tabler/icons-react";
+import { useAppSelector } from '../../store/hooks';
 
 type ReportData = { result: any[]; legends: any[], "conv-logs": any[] };
 
@@ -17,6 +18,7 @@ const Reports = () => {
     const [activeTab, setActiveTab] = useState<string>("results");
     const { newFunction: _getReports } = useAuthMidd<ReportData>(getReports);
     const [isPending, startTransition] = useTransition();
+    const token = useAppSelector((state) => state.users.token);
 
     useEffect(() => {
         getLogs();
@@ -31,6 +33,32 @@ const Reports = () => {
             handleAndVisualizeError("Error retrieving the current logs", e);
         }
         setLoading(false);
+    }
+
+    async function download(file: string = '') {
+        const API_URL = import.meta.env.VITE_API_URL
+        const url = `${API_URL}/home/downloadFile?file=${file}`
+        const authHeader = `${token}`;
+        const options = {
+            headers: {
+                Authorization: authHeader
+            }
+        };
+        let ext = ".csv";
+        if (["conv-logs"].includes(file)) {
+            ext = ".json"
+        }
+        try {
+            let blob = await fetch(url, options).then((res) => res.blob());
+            const urlFile = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = urlFile;
+            a.download = `${file}${ext}`;
+            a.click();
+        } catch (e) {
+            handleAndVisualizeError("Error downloading", e)
+        }
+
     }
 
     return (<div className={classes["container"]}>
@@ -62,7 +90,7 @@ const Reports = () => {
         </Group>)}
 
         <Tooltip label={`Download ${activeTab}`}>
-            <Button style={{ left: "unset", right: "8px", padding: '4px px' }}
+            <Button onClick={() => download(activeTab)} style={{ left: "unset", right: "8px", padding: '4px px' }}
                 radius="md" size="xs" variant="outline" className={classes["btn-dwn"]}>
                 <IconCloudDownload style={{ marginRight: 4 }} />  download
             </Button>
