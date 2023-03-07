@@ -37,10 +37,13 @@ const Jupyter = () => {
         if (!jpData) return;
 
         setLoading(true);
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             jpRef?.current?.setAttribute("src", `http://${jpData.url}`)
             setLoading(false);
         }, 2000)
+        return () => {
+            clearTimeout(timer);
+        }
     }, [jpData])
 
     return <div className={classes["container"]}>
