@@ -1,7 +1,6 @@
-import React from "react";
+import React, { memo } from "react";
 import { ScrollArea, Table, Text } from "@mantine/core";
 import { useState, useEffect } from 'react';
-import { render } from "react-dom";
 
 const SmartTable = ({ files, style = {}, columns, className }:
     {
@@ -40,7 +39,7 @@ const SmartTable = ({ files, style = {}, columns, className }:
     }
 
     return (
-        <ScrollArea h={`calc(100vh - 220px)`}>
+        <ScrollArea h={`calc(100vh - 212px)`}>
             <Table captionSide="bottom" className={className} {...style}
                 striped highlightOnHover withBorder withColumnBorders>
                 <thead>
@@ -65,4 +64,6 @@ const SmartTable = ({ files, style = {}, columns, className }:
     );
 };
 
-export default SmartTable;
+const SmartTableMemo = memo(SmartTable);
+
+export default SmartTableMemo;

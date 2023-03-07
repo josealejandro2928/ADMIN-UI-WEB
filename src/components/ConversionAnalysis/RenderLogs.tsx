@@ -1,6 +1,7 @@
 import { Grid, ScrollArea } from "@mantine/core";
 import classes from "./ConversionAnalysis.module.scss"
 import { Text } from "@mantine/core";
+import { memo } from "react";
 
 const RenderLogs = ({ dataLogs, errorLogs, title }: { dataLogs: Array<string>, errorLogs: Array<string>, title: string }) => {
     return <div className={classes["log-panel"]}>
@@ -37,5 +38,6 @@ const RenderLogs = ({ dataLogs, errorLogs, title }: { dataLogs: Array<string>, e
     </div>
 
 }
+const RenderLogsMemo = memo(RenderLogs)
 
-export default RenderLogs;
+export default RenderLogsMemo;

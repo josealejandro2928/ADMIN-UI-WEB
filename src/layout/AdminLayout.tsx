@@ -46,9 +46,9 @@ const AdminLayout = () => {
             navbar={<SideBar></SideBar>}
             header={<HeaderApp links={[{ label: "Example", "link": "#" }]}></HeaderApp>}
             footer={<Footer height={54}>{/* Header content */}</Footer>}
-            styles={(theme) => ({
-                main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
-            })}
+            // styles={(theme) => ({
+            //     main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
+            // })}
         >
             <div style={{ paddingRight: '1rem', height: "100%" }}>
                 <Outlet />

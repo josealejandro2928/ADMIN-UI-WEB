@@ -1,5 +1,5 @@
 import { Button, Group, Loader, Tabs, Tooltip } from "@mantine/core"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import IconXMI from "../../assets/images/icon-xml.png"
 import IconJSON from "../../assets/images/icon-json.png"
 import { handleAndVisualizeError } from "../../common";
@@ -16,6 +16,7 @@ const Reports = () => {
     const [data, setData] = useState<ReportData | null>()
     const [activeTab, setActiveTab] = useState<string>("results");
     const { newFunction: _getReports } = useAuthMidd<ReportData>(getReports);
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         getLogs();

@@ -1,15 +1,13 @@
 import { Button, Group, Loader, Modal, Tabs, Text, Tooltip } from "@mantine/core";
 import ConvIcon from "../../assets/images/conv-icon.svg";
 import AnalysisIcon from "../../assets/images/analysis-icon.svg";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Log } from "../../classes/config.classes";
 import classes from "./ConversionAnalysis.module.scss"
 import { handleAndVisualizeError } from '../../common/index';
 import useAuthMidd from '../../hooks/useAuthMidd';
 import { getLatestLogs, getModelAnalyse, getModelDiscover, invalidCache } from "../../functions/api.server";
 import RenderLogs from './RenderLogs';
-import { useDisclosure } from "@mantine/hooks";
-import { Link } from "react-router-dom";
 import { IconTrash } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
 
@@ -21,6 +19,7 @@ const ConversionAnalysis = () => {
     const { newFunction: _getModelAnalyse } = useAuthMidd<Log>(getModelAnalyse);
     const { newFunction: _getModelDiscover } = useAuthMidd<Log>(getModelDiscover);
     const { newFunction: _invalidCache } = useAuthMidd<Log>(invalidCache);
+    const [isPending, startTransition] = useTransition();
 
 
     useEffect(() => {
@@ -73,6 +72,7 @@ const ConversionAnalysis = () => {
     async function onInvalidCache() {
         try {
             await _invalidCache()
+            setLogs(null);
             toast("Cache invalidation successfully", { type: "info" });
         } catch (e) {
             handleAndVisualizeError("Error", e);
@@ -81,7 +81,7 @@ const ConversionAnalysis = () => {
 
 
     return <div className={classes["container"]}>
-        <Tabs onTabChange={(val: string) => setActiveTab(val)} variant="outline" radius="md" defaultValue="conversion">
+        <Tabs onTabChange={(val: string) => startTransition(() => setActiveTab(val))} variant="outline" radius="md" defaultValue="conversion">
             <Tabs.List>
                 <Tabs.Tab value="conversion" icon={<img src={ConvIcon} height={24} />}>Conversion</Tabs.Tab>
                 <Tabs.Tab value="analysis" icon={<img src={AnalysisIcon} height={24} />}>Analysis </Tabs.Tab>
@@ -91,6 +91,7 @@ const ConversionAnalysis = () => {
                 <RenderLogs title="Conversion Logs" dataLogs={logs?.conversionLogs?.dataLogs || []}
                     errorLogs={logs?.conversionLogs?.errorLogs || []}
                 ></RenderLogs>
+
 
             </Tabs.Panel>
             <Tabs.Panel value="analysis" pt="xs" >
