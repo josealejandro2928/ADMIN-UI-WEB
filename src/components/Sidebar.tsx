@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Navbar, Text, createStyles, getStylesRef, rem, Button, Avatar, Group, Divider } from '@mantine/core';
 import {
     IconSettings,
@@ -12,6 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setUserLogout } from '../store/features/userSlice';
 import { NavLink } from 'react-router-dom';
+import IconJupyter from "../assets/images/icons-jupyter.png"
 
 const useStyles = createStyles((theme) => ({
     navbar: {
@@ -72,6 +72,7 @@ const tabs = [
     { link: 'models', label: 'Models', icon: IconFileCode },
     { link: 'analysis', label: 'Conversion and Analysis ', icon: IconPlayerPlay },
     { link: 'results', label: 'Results and reports', icon: IconReportAnalytics },
+    { link: 'jupyter', label: 'Launch Jupyter', icon: IconJupyter },
     { link: 'config', label: 'Config Settings', icon: IconSettings }]
 
 export function SideBar() {
@@ -79,16 +80,30 @@ export function SideBar() {
     const dispatch = useAppDispatch()
     const { isLoggedIn, user } = useAppSelector((state) => state.users);
 
-    const links = tabs.map((item) => (
-        <NavLink
-            className={(navData) => cx(classes.link, { [classes.linkActive]: navData.isActive })}
-            to={item.link}
-            key={item.label}
-        >
-            <item.icon className={classes.linkIcon} stroke={1.5} />
-            <span>{item.label}</span>
-        </NavLink>
-    ));
+    const links = tabs.map((item) => {
+        if (typeof item.icon == "string") {
+            return (<NavLink
+                className={(navData) => cx(classes.link, { [classes.linkActive]: navData.isActive })}
+                to={item.link}
+                key={item.label}
+            >
+                <img src={IconJupyter} height={24} className={classes.linkIcon} />
+                <span>{item.label}</span>
+            </NavLink>)
+
+        } else {
+            return (<NavLink
+                className={(navData) => cx(classes.link, { [classes.linkActive]: navData.isActive })}
+                to={item.link}
+                key={item.label}
+            >
+                <item.icon className={classes.linkIcon} stroke={1.5} />
+                <span>{item.label}</span>
+            </NavLink>)
+        }
+
+
+    });
 
     function onLogout() {
         dispatch(setUserLogout());

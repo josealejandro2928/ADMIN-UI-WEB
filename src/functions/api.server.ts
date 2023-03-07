@@ -136,3 +136,25 @@ export async function getReports<T>(token: string): Promise<T> {
   });
   return handleFetchResponse<T>(res);
 }
+
+export async function startJupyter<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/home/startJupyter', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}
+
+export async function stopJupyter<T>(token: string): Promise<T> {
+  let res = await fetch(API_URL + '/home/stopJupyter', {
+    headers: {
+      Authorization: `${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  });
+  return handleFetchResponse<T>(res);
+}

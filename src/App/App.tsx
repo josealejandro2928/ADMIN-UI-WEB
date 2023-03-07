@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
-import reactLogo from '../assets/react.svg'
+import { useEffect} from 'react'
 import './App.scss'
 import AdminLayout from '../layout/AdminLayout';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { Group, Loader, Switch } from '@mantine/core';
+import { Group, Loader} from '@mantine/core';
 import Login from '../routes/Login';
 import Repository from '../components/Repository/Repository';
 import Models from '../components/Models/Models';
@@ -16,9 +15,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Slide } from 'react-toastify';
 import { setIsAuthInProgress, setUserLogin } from '../store/features/userSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import useAuthMidd from '../hooks/useAuthMidd';
 import ConversionAnalysis from '../components/ConversionAnalysis/ConversionAnalysis';
 import Reports from '../components/Reports/Reports';
+import Jupyter from '../components/Jupyter/Jupyter';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -56,6 +55,7 @@ function App() {
             <Route path="models" element={<Models />} />
             <Route path="analysis" element={<ConversionAnalysis />} />
             <Route path="results" element={<Reports />} />
+            <Route path="jupyter" element={<Jupyter />} />
           </Route>
           <Route path='*' element={<Navigate to="admin" />}></Route>
         </Routes>
