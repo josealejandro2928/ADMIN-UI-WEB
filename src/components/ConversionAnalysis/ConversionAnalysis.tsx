@@ -105,12 +105,12 @@ const ConversionAnalysis = () => {
             <Loader size="lg" variant="bars" />
         </Group>)}
         {activeTab == "conversion" &&
-            (<Button onClick={onDiscoverModels} radius="md" variant="gradient" className={classes["btn-run"]}>
+            (<Button w={120} onClick={onDiscoverModels} radius="md" variant="gradient" className={classes["btn-run"]}>
                 Run Discover
             </Button>)
         }
         {activeTab == "analysis" &&
-            (<Button onClick={onAnalyseModels} radius="md" variant="gradient" className={classes["btn-run"]}>
+            (<Button w={120} onClick={onAnalyseModels} radius="md" variant="gradient" className={classes["btn-run"]}>
                 Run Analysis
             </Button>)
         }
