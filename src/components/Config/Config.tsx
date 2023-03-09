@@ -23,6 +23,7 @@ type ConfigForm = {
 const ConfigComponent = () => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const config: Config | null | undefined = useAppSelector((state) => state.config.config);
+    const isAdmin = useAppSelector((state) => state.users.user?.isAdmin);
     const { newFunction: _updateConfig } = useAuthMidd<any>(updateConfig);
     const dispatch = useAppDispatch();
 
@@ -39,7 +40,7 @@ const ConfigComponent = () => {
         },
         validate: {
             timeCacheForDiscoveringSearchOverFilesInSeconds: (value) => {
-                if (!value || value < 10) return "Invalid, it should be greater than 10 s";
+                if (!value || value < 5) return "Invalid, it should be greater than 5 s";
                 return null
             },
             timeCacheForPollingFromExternalResources: (value) => {
@@ -74,10 +75,10 @@ const ConfigComponent = () => {
     return <div className={classes["container"]}>
         <Container>
             <Flex wrap="wrap" gap="sm" >
-                <NumberInput w="300px" required label="Cache time for discovering (s)" type="number"
+                <NumberInput disabled={!isAdmin} w="300px" required label="Cache time for discovering (s)" type="number"
                     {...form.getInputProps("timeCacheForDiscoveringSearchOverFilesInSeconds")} />
 
-                <NumberInput w="300px" required label="Cache time for polling external resources (s)" type="number"
+                <NumberInput disabled={!isAdmin} w="300px" required label="Cache time for polling external resources (s)" type="number"
                     {...form.getInputProps("timeCacheForPollingFromExternalResources")} />
 
                 <TextInput disabled w="300px" required label="Output folder name" type="text"
@@ -97,7 +98,7 @@ const ConfigComponent = () => {
                     {...form.getInputProps("archivesForSearching")} />
 
             </Flex>
-            <Button mt="lg" variant='gradient' disabled={!form.isValid()} onClick={onSave}>Save</Button>
+            <Button mt="lg" variant='gradient' disabled={!form.isValid() || !isAdmin} onClick={onSave}>Save</Button>
         </Container>
         {isLoading && (<Group className={classes["loader"]} position="center">
             <Loader size="lg" variant="bars" />

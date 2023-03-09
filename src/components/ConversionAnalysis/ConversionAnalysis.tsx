@@ -10,6 +10,7 @@ import { getLatestLogs, getModelAnalyse, getModelDiscover, invalidCache } from "
 import RenderLogs from './RenderLogs';
 import { IconTrash } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
+import { useAppSelector } from "../../store/hooks";
 
 const ConversionAnalysis = () => {
     const [logs, setLogs] = useState<{ conversionLogs: Log, analysisLogs: Log } | null>();
@@ -20,7 +21,7 @@ const ConversionAnalysis = () => {
     const { newFunction: _getModelDiscover } = useAuthMidd<Log>(getModelDiscover);
     const { newFunction: _invalidCache } = useAuthMidd<Log>(invalidCache);
     const [isPending, startTransition] = useTransition();
-
+    const isAdmin = useAppSelector((state) => state.users.user?.isAdmin);
 
     useEffect(() => {
         getLogs();
@@ -115,11 +116,11 @@ const ConversionAnalysis = () => {
             </Button>)
         }
 
-        <Tooltip label="Invalid Cache">
+        {isAdmin && <Tooltip label="Invalid Cache">
             <Button onClick={onInvalidCache} style={{ left: "unset", right: "8px", padding: '4px 8px' }} radius="md" variant="outline" color="red" className={classes["btn-run"]}>
                 <IconTrash></IconTrash> Cache
             </Button>
-        </Tooltip>
+        </Tooltip>}
 
 
     </div>

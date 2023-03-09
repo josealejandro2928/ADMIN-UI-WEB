@@ -1,4 +1,4 @@
-import { Navbar, Text, createStyles, getStylesRef, rem, Button, Avatar, Group, Divider } from '@mantine/core';
+import { Navbar, Text, createStyles, getStylesRef, rem, Button, Avatar, Group, Divider, Modal } from '@mantine/core';
 import {
     IconSettings,
     IconLogout,
@@ -12,6 +12,8 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setUserLogout } from '../store/features/userSlice';
 import { NavLink } from 'react-router-dom';
 import IconJupyter from "../assets/images/icons-jupyter.png"
+import SelectUserModal from './modals/SelectUserModal';
+import { useDisclosure } from '@mantine/hooks';
 
 const useStyles = createStyles((theme) => ({
     navbar: {
@@ -25,6 +27,7 @@ const useStyles = createStyles((theme) => ({
 
     link: {
         ...theme.fn.focusStyles(),
+        cursor: "pointer",
         display: 'flex',
         alignItems: 'center',
         textDecoration: 'none',
@@ -78,7 +81,7 @@ const tabs = [
 export function SideBar() {
     const { classes, cx } = useStyles();
     const dispatch = useAppDispatch()
-    const { isLoggedIn, user } = useAppSelector((state) => state.users);
+    const { user } = useAppSelector((state) => state.users);
 
     const links = tabs.map((item) => {
         if (typeof item.icon == "string") {
@@ -108,35 +111,52 @@ export function SideBar() {
     function onLogout() {
         dispatch(setUserLogout());
     }
+    const [openedSelectUser, { open: openSelectUser, close: closeSelectUser }] = useDisclosure(false);
+
+    function onSelectUserOpenModal(e: any) {
+        e.preventDefault();
+        openSelectUser();
+    }
+
 
     return (
-        <Navbar width={{ sm: 300 }} p="md" className={classes.navbar}>
-            <Navbar.Section>
-                <Group>
-                    <Avatar color="cyan" radius="xl">{user?.name.charAt(0)}{user?.lastName.charAt(0)}</Avatar>
-                    <Text weight={500} size="sm" color="dimmed">
-                        {user?.email}
-                    </Text>
-                </Group>
+        <>
+            <Navbar width={{ sm: 300 }} p="md" className={classes.navbar}>
+                <Navbar.Section>
+                    <Group>
+                        <Avatar color="cyan" radius="xl">{user?.name.charAt(0)}{user?.lastName.charAt(0)}</Avatar>
+                        <Text weight={500} size="sm" color="dimmed">
+                            {user?.email}
+                        </Text>
+                    </Group>
 
-            </Navbar.Section>
-            <Divider my="sm" />
+                </Navbar.Section>
+                <Divider my="sm" />
 
-            <Navbar.Section grow mt="xs">
-                {links}
-            </Navbar.Section>
+                <Navbar.Section grow mt="xs">
+                    {links}
+                </Navbar.Section>
 
-            <Navbar.Section className={classes.footer}>
-                <p className={classes.link}>
-                    <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-                    <span>Change account</span>
-                </p>
+                <Navbar.Section className={classes.footer}>
+                    {user?.isAdmin && <p onClick={onSelectUserOpenModal} className={classes.link}>
+                        <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
+                        <span>Change account</span>
+                    </p>}
 
-                <Button size="md" fullWidth variant="white" style={{ cursor: "pointer" }} className={classes.link} onClick={onLogout}>
-                    <IconLogout className={classes.linkIcon} stroke={1.5} />
-                    <span>Logout</span>
-                </Button>
-            </Navbar.Section>
-        </Navbar>
+                    <Button size="md" fullWidth variant="white" style={{ cursor: "pointer" }} className={classes.link} onClick={onLogout}>
+                        <IconLogout className={classes.linkIcon} stroke={1.5} />
+                        <span>Logout</span>
+                    </Button>
+                </Navbar.Section>
+            </Navbar>
+
+            <Modal closeOnEscape
+                opened={openedSelectUser}
+                size="lg"
+                onClose={closeSelectUser}
+                title="Select a user to sign in">
+                <SelectUserModal></SelectUserModal>
+            </Modal>
+        </>
     );
 }
