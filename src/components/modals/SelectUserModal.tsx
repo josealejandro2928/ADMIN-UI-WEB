@@ -1,10 +1,6 @@
 import { Button, Checkbox, List, Flex, Group, Loader } from '@mantine/core';
 import { useState } from 'react';
 import classes from "./AddModalFromLocal.module.scss"
-import useAuthMidd from '../../hooks/useAuthMidd';
-import { uploadModels } from '../../functions/api.server';
-import { handleAndVisualizeError } from '../../common/index';
-import { toast } from 'react-toastify';
 import { User } from '../../classes/user.classes';
 
 

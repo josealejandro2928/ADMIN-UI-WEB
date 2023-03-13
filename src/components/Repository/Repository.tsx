@@ -3,15 +3,14 @@ import useAuthMidd from '../../hooks/useAuthMidd';
 import { getModels, deleteModel } from '../../functions/api.server';
 import { handleAndVisualizeError } from '../../common/index';
 import { useAppSelector } from '../../store/hooks';
-import { Tabs, Grid, Button, Modal, Group, Text, Stack, List } from '@mantine/core';
-import IconPc from "../../assets/images/icon-pc.png";
+import { Tabs, Grid, Button, Modal, Text, List, useMantineColorScheme } from '@mantine/core';
 import IconGithub from "../../assets/images/icon-github.svg";
 
 import classes from "./Repository.module.scss";
 import NormalItemsView from './NormalItemsView';
 import DetailsMenuItemView from './DetailsMenuItemView';
 import { ItemRepository } from '../../classes/repository.classes';
-import { IconPlus } from '@tabler/icons-react';
+import { IconDeviceLaptop, IconPlus } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import AddModalFromLocal from '../modals/AddModalFromLocal';
 import AddGithubLinksModal from '../modals/AddGithubLinksModal';
@@ -21,7 +20,6 @@ const Repository = () => {
     const { newFunction: listModels } = useAuthMidd(getModels);
     const { newFunction: deleteModelFromRepo } = useAuthMidd(deleteModel);
     const [isLoading, setLoading] = useState<boolean>(false);
-    // const { isLoggedIn, isAuthInProgress } = useAppSelector((state) => state.users);
     const [localModelsRepo, setLocalModelsRepo] = useState<Array<ItemRepository>>([]);
     const [githubModelsRepo, setGithubModelsRepo] = useState<Array<ItemRepository>>([]);
     const [selectionLocal, setSelectionLocal] = useState<ItemRepository | null>(null);
@@ -29,6 +27,8 @@ const Repository = () => {
     const [openedAddNewLocalModelModal, { open: openAddNewLocalModelModal, close: closeAddNewLocalModelModal }] = useDisclosure(false);
     const [openedAddNewGithubLinksModal, { open: openAddNewGithubLinksModal, close: closeAddNewGithubLinksModal }] = useDisclosure(false);
     const config: Config | null | undefined = useAppSelector((state) => state.config.config);
+    const { colorScheme } = useMantineColorScheme();
+    const isDark = colorScheme === 'dark';
 
     useEffect(() => {
         getDataFromModels();
@@ -76,7 +76,7 @@ const Repository = () => {
 
     return <Tabs variant="outline" radius="md" defaultValue="Local">
         <Tabs.List>
-            <Tabs.Tab value="Local" icon={<img src={IconPc} height={24} />}>From Local</Tabs.Tab>
+            <Tabs.Tab value="Local" icon={<IconDeviceLaptop />}>From Local</Tabs.Tab>
             <Tabs.Tab value="Github" icon={<img src={IconGithub} height={24} />}>From Github</Tabs.Tab>
         </Tabs.List>
 
@@ -85,7 +85,7 @@ const Repository = () => {
                 <Grid.Col xs={8} onClick={() => setSelectionLocal(null)}>
                     <NormalItemsView onClick={onSelectLocalItem} items={localModelsRepo} selection={selectionLocal}></NormalItemsView>
                 </Grid.Col>
-                <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
+                <Grid.Col h={100} xs={4} className={classes["right-panel"] + " " + (isDark ? classes["dark"] : "")}>
                     <DetailsMenuItemView
                         deleteModel={onDeleteModel}
                         item={selectionLocal}
@@ -114,7 +114,7 @@ const Repository = () => {
                     <NormalItemsView onClick={onSelectGithubItem} items={githubModelsRepo}
                         selection={selectionGithub}></NormalItemsView>
                 </Grid.Col>
-                <Grid.Col h={100} xs={4} className={classes["right-panel"]}>
+                <Grid.Col h={100} xs={4} className={`${classes["right-panel"]} ${isDark ? classes["dark"] : ""}`}>
                     <DetailsMenuItemView deleteModel={onDeleteModel}
                         item={selectionGithub}
                         addBtn={

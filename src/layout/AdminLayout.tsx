@@ -2,9 +2,9 @@ import { AppShell, Navbar, Header, Footer } from "@mantine/core";
 import React from "react";
 import { SideBar } from '../components/Sidebar';
 import { HeaderApp } from "../components/Header";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useAuthMidd from '../hooks/useAuthMidd';
 import { getConfig } from "../functions/api.server";
 import { handleAndVisualizeError } from '../common/index';
@@ -16,6 +16,8 @@ const AdminLayout = () => {
     const { isLoggedIn, isAuthInProgress } = useAppSelector((state) => state.users);
     const { newFunction: getSecureConfig } = useAuthMidd<{ config: Config }>(getConfig)
     const dispatch = useAppDispatch()
+    const [openedSidebar, setOpenedSidebar] = useState(false);
+    const location = useLocation()
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -24,6 +26,11 @@ const AdminLayout = () => {
             dispatch(setConfig({ config: null }));
         }
     }, [isLoggedIn]);
+
+    useEffect(() => {
+        if (openedSidebar) setOpenedSidebar(false);
+    }, [location]);
+
 
     async function updateConfig() {
         try {
@@ -43,14 +50,11 @@ const AdminLayout = () => {
     return (
         <AppShell
             padding="md"
-            navbar={<SideBar></SideBar>}
-            header={<HeaderApp links={[{ label: "Example", "link": "#" }]}></HeaderApp>}
-            footer={<Footer height={54}>{/* Header content */}</Footer>}
-            // styles={(theme) => ({
-            //     main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
-            // })}
+            navbarOffsetBreakpoint="sm"
+            navbar={<SideBar opened={openedSidebar}  ></SideBar>}
+            header={<HeaderApp openSidebar={openedSidebar} onToggledSidebar={setOpenedSidebar}></HeaderApp>}
         >
-            <div style={{ paddingRight: '1rem', height: "100%" }}>
+            <div onClick={() => setOpenedSidebar(false)} style={{ paddingRight: '1rem', height: "100%" }}>
                 <Outlet />
             </div>
         </AppShell>

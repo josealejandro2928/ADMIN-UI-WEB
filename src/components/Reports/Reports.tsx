@@ -1,7 +1,9 @@
-import { Button, Group, Loader, Tabs, Tooltip } from "@mantine/core"
-import { useEffect, useState, useTransition } from "react";
+import { Button, Group, Loader, Tabs, Tooltip, useMantineColorScheme } from "@mantine/core"
+import { useEffect, useState } from "react";
 import IconXMI from "../../assets/images/icon-xml.png"
 import IconJSON from "../../assets/images/icon-json.png"
+import IconJSONDark from "../../assets/images/icon-json-dark.png"
+import IconXMLDark from "../../assets/images/icon-xml-dark.png";
 import { handleAndVisualizeError } from "../../common";
 import useAuthMidd from "../../hooks/useAuthMidd";
 import { getReports } from "../../functions/api.server";
@@ -17,8 +19,9 @@ const Reports = () => {
     const [data, setData] = useState<ReportData | null>()
     const [activeTab, setActiveTab] = useState<string>("results");
     const { newFunction: _getReports } = useAuthMidd<ReportData>(getReports);
-    const [isPending, startTransition] = useTransition();
     const token = useAppSelector((state) => state.users.token);
+    const { colorScheme } = useMantineColorScheme();
+    const isDark = colorScheme === 'dark';
 
     useEffect(() => {
         getLogs();
@@ -64,9 +67,9 @@ const Reports = () => {
     return (<div className={classes["container"]}>
         <Tabs onTabChange={(val: string) => setActiveTab(val)} variant="outline" radius="md" defaultValue="results">
             <Tabs.List>
-                <Tabs.Tab value="results" icon={<img src={IconXMI} height={24} />}>Results</Tabs.Tab>
-                <Tabs.Tab value="legends" icon={<img src={IconXMI} height={24} />}>Legends </Tabs.Tab>
-                <Tabs.Tab value="conv-logs" icon={<img src={IconJSON} height={24} />}>Logs </Tabs.Tab>
+                <Tabs.Tab value="results" icon={<img src={!isDark ? IconXMI : IconXMLDark} height={24} />}>Results</Tabs.Tab>
+                <Tabs.Tab value="legends" icon={<img src={!isDark ? IconXMI : IconXMLDark} height={24} />}>Legends </Tabs.Tab>
+                <Tabs.Tab value="conv-logs" icon={<img src={!isDark ? IconJSON : IconJSONDark} height={24} />}>Logs </Tabs.Tab>
             </Tabs.List>
 
             <Tabs.Panel value="results" pt="xs" >

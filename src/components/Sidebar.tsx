@@ -18,6 +18,12 @@ import { useDisclosure } from '@mantine/hooks';
 const useStyles = createStyles((theme) => ({
     navbar: {
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+        width: 300,
+        [`@media (max-width: ${theme.breakpoints.sm})`]: {
+            width: "350px",
+            maxWidth:"90%",
+            boxShadow: `2px 0px 9px rgba(0,0,0,0.2)`
+        }
     },
 
     title: {
@@ -78,7 +84,7 @@ const tabs = [
     { link: 'jupyter', label: 'Launch Jupyter', icon: IconJupyter },
     { link: 'config', label: 'Config Settings', icon: IconSettings }]
 
-export function SideBar() {
+export function SideBar({ opened }: { opened: boolean }) {
     const { classes, cx } = useStyles();
     const dispatch = useAppDispatch()
     const { user } = useAppSelector((state) => state.users);
@@ -108,7 +114,8 @@ export function SideBar() {
 
     });
 
-    function onLogout() {
+    function onLogout(e: any) {
+        e.preventDefault();
         dispatch(setUserLogout());
     }
     const [openedSelectUser, { open: openSelectUser, close: closeSelectUser }] = useDisclosure(false);
@@ -121,7 +128,10 @@ export function SideBar() {
 
     return (
         <>
-            <Navbar width={{ sm: 300 }} p="md" className={classes.navbar}>
+            <Navbar p="md" className={classes.navbar}
+                width={{ base: 300 }}
+                hiddenBreakpoint="sm"
+                hidden={!opened}>
                 <Navbar.Section>
                     <Group>
                         <Avatar color="cyan" radius="xl">{user?.name.charAt(0)}{user?.lastName.charAt(0)}</Avatar>
@@ -143,10 +153,10 @@ export function SideBar() {
                         <span>Change account</span>
                     </p>}
 
-                    <Button size="md" fullWidth variant="white" style={{ cursor: "pointer" }} className={classes.link} onClick={onLogout}>
+                    <NavLink to={""} className={classes.link} onClick={onLogout}>
                         <IconLogout className={classes.linkIcon} stroke={1.5} />
                         <span>Logout</span>
-                    </Button>
+                    </NavLink>
                 </Navbar.Section>
             </Navbar>
 

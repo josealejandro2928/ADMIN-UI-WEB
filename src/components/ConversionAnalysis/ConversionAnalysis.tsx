@@ -1,6 +1,4 @@
 import { Button, Group, Loader, Modal, Tabs, Text, Tooltip } from "@mantine/core";
-import ConvIcon from "../../assets/images/conv-icon.svg";
-import AnalysisIcon from "../../assets/images/analysis-icon.svg";
 import { useEffect, useState, useTransition } from 'react';
 import { Log } from "../../classes/config.classes";
 import classes from "./ConversionAnalysis.module.scss"
@@ -8,7 +6,7 @@ import { handleAndVisualizeError } from '../../common/index';
 import useAuthMidd from '../../hooks/useAuthMidd';
 import { getLatestLogs, getModelAnalyse, getModelDiscover, invalidCache } from "../../functions/api.server";
 import RenderLogs from './RenderLogs';
-import { IconTrash } from '@tabler/icons-react';
+import { IconTrash, IconDeviceDesktopAnalytics, IconTransform } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
 import { useAppSelector } from "../../store/hooks";
 
@@ -84,8 +82,8 @@ const ConversionAnalysis = () => {
     return <div className={classes["container"]}>
         <Tabs onTabChange={(val: string) => startTransition(() => setActiveTab(val))} variant="outline" radius="md" defaultValue="conversion">
             <Tabs.List>
-                <Tabs.Tab value="conversion" icon={<img src={ConvIcon} height={24} />}>Conversion</Tabs.Tab>
-                <Tabs.Tab value="analysis" icon={<img src={AnalysisIcon} height={24} />}>Analysis </Tabs.Tab>
+                <Tabs.Tab value="conversion" icon={<IconTransform />}>Conversion</Tabs.Tab>
+                <Tabs.Tab value="analysis" icon={<IconDeviceDesktopAnalytics />}>Analysis </Tabs.Tab>
             </Tabs.List>
 
             <Tabs.Panel value="conversion" pt="xs" >

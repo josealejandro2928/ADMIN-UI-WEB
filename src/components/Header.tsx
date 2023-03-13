@@ -1,7 +1,8 @@
-import { createStyles, Header, Menu, Group, Center, Burger, Container, rem } from '@mantine/core';
+import { createStyles, Header, Menu, Group, Center, Burger, Container, rem, ActionIcon, useMantineColorScheme, Flex } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Image } from '@mantine/core';
 import Logo from "../assets/react.svg"
+import { IconMoonStars, IconSun } from '@tabler/icons-react';
 
 const useStyles = createStyles((theme) => ({
     header: {
@@ -28,29 +29,44 @@ const useStyles = createStyles((theme) => ({
 
 }));
 
-interface HeaderSearchProps {
-    links: { link: string; label: string; }[];
-}
 
-export function HeaderApp({ links }: HeaderSearchProps) {
-    const [opened, { toggle }] = useDisclosure(false);
+
+export function HeaderApp({ openSidebar, onToggledSidebar }: { openSidebar: boolean, onToggledSidebar: (state: any) => any }) {
     const { classes } = useStyles();
+
+    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+    const dark = colorScheme === 'dark';
 
     return (
         <Header height={60} className={classes.header} mb={120}>
             <div className={classes.inner}>
-                <Group >
-                    <Image src={Logo} fit="unset" width={40} height={30}></Image>
-                    Discover and Analyser of AADL Models App
-                </Group>
+                <Flex w={"100%"} justify="space-between">
+                    <Group>
+                        <Image src={Logo} fit="unset" width={40} height={30}></Image>
+                        AADL Models Analyser
+                    </Group>
+
+
+                    <ActionIcon
+                        title="Toggle color scheme"
+                        variant="transparent"
+                        style={{ color: dark ? "yellow" : "white" }}
+                        onClick={() => toggleColorScheme()}
+                    >
+                        {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
+                    </ActionIcon>
+                </Flex>
                 <Burger
-                    opened={opened}
-                    onClick={toggle}
+                    opened={openSidebar}
+                    onClick={() => { onToggledSidebar((state: boolean) => !state) }}
                     className={classes.burger}
                     size="sm"
                     color="#fff"
                 />
+
             </div>
+
+
         </Header>
     );
 }
