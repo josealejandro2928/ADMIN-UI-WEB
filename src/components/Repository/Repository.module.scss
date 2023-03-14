@@ -12,15 +12,18 @@
       height: 64px;
     }
     &:hover {
-      filter: brightness(1.1);
+      transform: scale(1.05);
     }
+    transition: all ease 0.15s;
   }
   .selected {
-    img {
-      background-color: #b3e5fc;
-    }
-    .text {
-      background-color: #b3e5fc;
+    background-color: #b3e5fc;
+    border-radius: 4px;
+    padding: 2px;
+    transition: all ease 0.15s;
+    &.dark {
+      background-color: #1e88e5;
+      color: #fff;
     }
   }
 }

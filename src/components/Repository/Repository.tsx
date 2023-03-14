@@ -28,7 +28,6 @@ const Repository = () => {
     const [openedAddNewGithubLinksModal, { open: openAddNewGithubLinksModal, close: closeAddNewGithubLinksModal }] = useDisclosure(false);
     const config: Config | null | undefined = useAppSelector((state) => state.config.config);
     const { colorScheme } = useMantineColorScheme();
-    const isDark = colorScheme === 'dark';
 
     useEffect(() => {
         getDataFromModels();
@@ -85,7 +84,7 @@ const Repository = () => {
                 <Grid.Col xs={8} onClick={() => setSelectionLocal(null)}>
                     <NormalItemsView onClick={onSelectLocalItem} items={localModelsRepo} selection={selectionLocal}></NormalItemsView>
                 </Grid.Col>
-                <Grid.Col h={100} xs={4} className={classes["right-panel"] + " " + (isDark ? classes["dark"] : "")}>
+                <Grid.Col h={100} xs={4} className={classes["right-panel"] + " " + classes[colorScheme]}>
                     <DetailsMenuItemView
                         deleteModel={onDeleteModel}
                         item={selectionLocal}
@@ -114,7 +113,7 @@ const Repository = () => {
                     <NormalItemsView onClick={onSelectGithubItem} items={githubModelsRepo}
                         selection={selectionGithub}></NormalItemsView>
                 </Grid.Col>
-                <Grid.Col h={100} xs={4} className={`${classes["right-panel"]} ${isDark ? classes["dark"] : ""}`}>
+                <Grid.Col h={100} xs={4} className={`${classes["right-panel"]} ${classes[colorScheme]}`}>
                     <DetailsMenuItemView deleteModel={onDeleteModel}
                         item={selectionGithub}
                         addBtn={
