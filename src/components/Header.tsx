@@ -1,7 +1,7 @@
-import { createStyles, Header, Menu, Group, Center, Burger, Container, rem, ActionIcon, useMantineColorScheme, Flex } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { createStyles, Header, Group, Burger, rem, ActionIcon, useMantineColorScheme, Flex } from '@mantine/core';
 import { Image } from '@mantine/core';
-import Logo from "../assets/react.svg"
+// import Logo from "../assets/react.svg"
+import Logo from "../assets/logo.jpg";
 import { IconMoonStars, IconSun } from '@tabler/icons-react';
 
 const useStyles = createStyles((theme) => ({
@@ -42,8 +42,8 @@ export function HeaderApp({ openSidebar, onToggledSidebar }: { openSidebar: bool
             <div className={classes.inner}>
                 <Flex w={"100%"} justify="space-between">
                     <Group>
-                        <Image src={Logo} fit="unset" width={40} height={30}></Image>
-                        AADL Models Analyser
+                        <img src={Logo} height={40} style={{ borderRadius: "50%" }}></img>
+                        Architectural Models Tool
                     </Group>
 
 

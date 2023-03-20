@@ -1,4 +1,4 @@
-import { AppShell, Navbar, Header, Footer } from "@mantine/core";
+import { AppShell, Navbar, Header, Footer, Group, Loader } from "@mantine/core";
 import React from "react";
 import { SideBar } from '../components/Sidebar';
 import { HeaderApp } from "../components/Header";
@@ -42,7 +42,14 @@ const AdminLayout = () => {
     }
 
 
-    if (isAuthInProgress) return <p>loading...</p>
+    if (isAuthInProgress) {
+        return (
+            (<Group h={"100vh"} position="center">
+                <Loader size="lg" variant="bars" />
+            </Group>)
+        )
+    }
+
     if (!isLoggedIn) {
         return <Navigate to="/auth" replace />;
     }

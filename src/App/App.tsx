@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import './App.scss'
 import AdminLayout from '../layout/AdminLayout';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { ColorScheme, ColorSchemeProvider, Group, Loader, MantineProvider } from '@mantine/core';
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import Login from '../routes/Login';
 import Repository from '../components/Repository/Repository';
 import Models from '../components/Models/Models';
@@ -76,11 +76,6 @@ function App() {
             closeButton={true}
             transition={Slide}
             pauseOnHover limit={3} />
-          {isAuthInProgress &&
-            (<Group position="center">
-              <Loader size="lg" variant="bars" />
-            </Group>)
-          }
         </ErrorBoundary >
       </MantineProvider>
     </ColorSchemeProvider>

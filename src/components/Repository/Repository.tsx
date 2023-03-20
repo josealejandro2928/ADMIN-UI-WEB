@@ -3,7 +3,7 @@ import useAuthMidd from '../../hooks/useAuthMidd';
 import { getModels, deleteModel } from '../../functions/api.server';
 import { handleAndVisualizeError } from '../../common/index';
 import { useAppSelector } from '../../store/hooks';
-import { Tabs, Grid, Button, Modal, Text, List, useMantineColorScheme } from '@mantine/core';
+import { Tabs, Grid, Button, Modal, Text, List, useMantineColorScheme, ScrollArea } from '@mantine/core';
 import IconGithub from "../../assets/images/icon-github.svg";
 
 import classes from "./Repository.module.scss";
@@ -37,13 +37,17 @@ const Repository = () => {
         setLoading(true);
         try {
             let data: any = await listModels();
-            setLocalModelsRepo(data.localModelsRepo)
-            setGithubModelsRepo(data.githubModelsRepo)
+            setLocalModelsRepo(sortModels(data.localModelsRepo))
+            setGithubModelsRepo(sortModels(data.githubModelsRepo))
         } catch (e: any) {
             handleAndVisualizeError("Error", e);
         }
         setLoading(false);
 
+    }
+
+    function sortModels(items: Array<ItemRepository>) {
+        return items.sort((a, b) => a.name.localeCompare(b.name))
     }
 
     function onSelectLocalItem(item: any) {
@@ -82,7 +86,9 @@ const Repository = () => {
         <Tabs.Panel value="Local" pt="xs" >
             <Grid>
                 <Grid.Col xs={8} onClick={() => setSelectionLocal(null)}>
-                    <NormalItemsView onClick={onSelectLocalItem} items={localModelsRepo} selection={selectionLocal}></NormalItemsView>
+                    <ScrollArea h={`calc(100vh - 180px)`}>
+                        <NormalItemsView onClick={onSelectLocalItem} items={localModelsRepo} selection={selectionLocal}></NormalItemsView>
+                    </ScrollArea>
                 </Grid.Col>
                 <Grid.Col h={100} xs={4} className={classes["right-panel"] + " " + classes[colorScheme]}>
                     <DetailsMenuItemView

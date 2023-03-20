@@ -4,7 +4,7 @@ import { ItemRepository } from '../../classes/repository.classes';
 
 const TableFiles = ({ files, icon }: { files: Array<ItemRepository>, icon: any }) => {
     return (
-        <ScrollArea h={`calc(100vh - 220px)`}>
+        <ScrollArea h={`calc(100vh - 180px)`}>
             <Table captionSide="bottom"
                 striped highlightOnHover withBorder withColumnBorders>
                 <thead>
