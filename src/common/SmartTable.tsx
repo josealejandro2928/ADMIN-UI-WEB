@@ -35,7 +35,7 @@ const SmartTable = ({ files, style = {}, columns, className }:
         if ((typeof el == "string" || typeof el == "number") && !isNaN(parseInt(el as string))) {
             return (+el).toFixed(2)
         }
-        return el.toString();
+        return el?.toString();
     }
 
     return (

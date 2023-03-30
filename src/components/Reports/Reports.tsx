@@ -76,7 +76,7 @@ const Reports = () => {
                 <SmartTable className={classes["report-table"]} files={data?.result || []}
                     columns={
                         ["model_name", "is_parsed", "sys_name",
-                            "num_comp", "num_conn", "size", "coupling", "cohesion", "avg_shortest_path", "avg_deg_cent",
+                            "no_components", "no_connectors", "no_size", "coupling", "cohesion", "avg_shortest_path", "avg_deg_cent",
                             "graph_density", "no_hardware_comp", "no_software_comp", "no_sys_comp"]}
                 />
             </Tabs.Panel>
