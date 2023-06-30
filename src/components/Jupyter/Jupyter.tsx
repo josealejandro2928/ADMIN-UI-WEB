@@ -23,6 +23,7 @@ const Jupyter = () => {
             try {
                 setLoading(true);
                 let data = await _startJupyter();
+                console.log("🚀 ~ file: Jupyter.tsx:26 ~ data:", data)
                 setJpData(data);
             } catch (e) {
                 handleAndVisualizeError("Error", e);

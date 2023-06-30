@@ -75,7 +75,7 @@ function App() {
             position="bottom-right"
             closeButton={true}
             transition={Slide}
-            pauseOnHover limit={3} />
+            pauseOnHover limit={1} />
         </ErrorBoundary >
       </MantineProvider>
     </ColorSchemeProvider>
